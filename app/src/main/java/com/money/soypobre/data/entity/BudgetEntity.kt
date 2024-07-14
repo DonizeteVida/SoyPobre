@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 class BudgetEntity(
     @PrimaryKey
     val id: Long,
-    val description: String
+    val description: String,
+    val price: Double,
+    val type: Int
 )
