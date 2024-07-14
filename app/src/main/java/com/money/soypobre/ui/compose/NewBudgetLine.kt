@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.DropdownMenuItem
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.money.soypobre.ui.theme.SoyPobreTheme
@@ -28,13 +30,13 @@ fun BudgetLine(
     categories: Array<String> = emptyArray(),
     onAddClick: (category: String, description: String) -> Unit
 ) {
-    val (category, setCategory) = remember { mutableStateOf("") }
-    val (description, setDescription) = remember { mutableStateOf("") }
-
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
 
+    val (category, setCategory) = remember { mutableStateOf("") }
+    val (money, setMoney) = remember { mutableStateOf("") }
+
     val (categoryError, hasCategoryError) = remember { mutableStateOf(false) }
-    val (descriptionError, hasDescriptionError) = remember { mutableStateOf(false) }
+    val (moneyError, hasMoneyError) = remember { mutableStateOf(false) }
 
     Row(
         Modifier.fillMaxWidth(),
@@ -63,7 +65,6 @@ fun BudgetLine(
             ) {
                 categories.forEach { category ->
                     DropdownMenuItem(
-                        modifier = Modifier.fillMaxWidth(),
                         text = {
                             Text(category)
                         },
@@ -78,27 +79,27 @@ fun BudgetLine(
         Spacer(modifier = Modifier.width(16.dp))
         OutlinedTextField(
             modifier = Modifier.weight(1F),
-            isError = descriptionError,
-            value = description,
-            onValueChange = setDescription
+            isError = moneyError,
+            value = money,
+            onValueChange = setMoney,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(
             onClick = {
-                val categoryError = category
-                    .isBlank()
+                val categoryError = category.isBlank()
                 hasCategoryError(categoryError)
 
-                val descriptionError = description
-                    .run { isBlank() || length < 8 }
-                hasDescriptionError(descriptionError)
+                val moneyError = money.isBlank() ||
+                        money.toFloatOrNull() == null
+                hasMoneyError(moneyError)
 
-                if (categoryError || descriptionError) {
+                if (categoryError || moneyError) {
                     return@IconButton
                 }
-                onAddClick(category, description)
+                onAddClick(category, money)
                 setCategory("")
-                setDescription("")
+                setMoney("")
             }
         ) {
             RoundedIcon(icon = Icons.Rounded.Add)

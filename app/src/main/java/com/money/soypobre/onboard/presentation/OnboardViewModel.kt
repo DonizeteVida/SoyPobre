@@ -8,11 +8,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardViewModel @Inject constructor() : ViewModel() {
-    private val state = MutableStateFlow(OnboardState())
+    val state = MutableStateFlow(OnboardState())
 
     fun updateUsername(username: String) {
         state.update {
             it.copy(username = username)
+        }
+    }
+
+    fun updateUserExpenses(expenses: List<Pair<String, String>>) {
+        state.update {
+            it.copy(expenses = expenses)
+        }
+    }
+
+    fun updateUserEarnings(earnings: List<Pair<String, String>>) {
+        state.update {
+            it.copy(earnings = earnings)
         }
     }
 }
