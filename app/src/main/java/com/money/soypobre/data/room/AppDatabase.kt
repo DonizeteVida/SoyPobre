@@ -6,6 +6,7 @@ import com.money.soypobre.data.entity.SampleEntity
 
 @Database(
     version = 1,
+    exportSchema = false,
     entities = [
         SampleEntity::class
     ]
