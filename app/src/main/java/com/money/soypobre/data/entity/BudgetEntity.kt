@@ -3,8 +3,9 @@ package com.money.soypobre.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "sample")
-class SampleEntity(
+@Entity(tableName = "budget")
+class BudgetEntity(
     @PrimaryKey
-    val id: Long
+    val id: Long,
+    val description: String
 )
