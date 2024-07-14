@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SoyPobre</string>
+    <string name="app_money_symbol">R$</string>
+    <string name="app_money_format">R$ %s</string>
 
     <string name="onboard_page_one_title">Bem vindo ao SoyPobre</string>
     <string name="onboard_page_one_subtitle">Vamos nos conhecer primeiro!</string>
@@ -9,6 +11,9 @@
     <string name="onboard_page_two_title">Vamos criar nosso primeiro orcamento</string>
     <string name="onboard_page_two_expense_title">Gastos</string>
     <string name="onboard_page_two_earnings_title">Ganhos</string>
+
+    <string name="onboard_page_three_title">Vamos confirmar suas informacoes: </string>
+    <string name="onboard_page_three_username_confirm">O seu nome e: %s</string>
 
     <array name="onboard_known_expense_categories">
         <item>Saude</item>

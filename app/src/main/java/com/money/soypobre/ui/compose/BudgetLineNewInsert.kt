@@ -19,14 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.money.soypobre.R
 import com.money.soypobre.ui.theme.SoyPobreTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BudgetLine(
+fun BudgetLineNewInsert(
     categories: Array<String> = emptyArray(),
     onAddClick: (category: String, description: String) -> Unit
 ) {
@@ -78,6 +80,9 @@ fun BudgetLine(
         }
         Spacer(modifier = Modifier.width(16.dp))
         OutlinedTextField(
+            leadingIcon = {
+                Text(stringResource(id = R.string.app_money_symbol))
+            },
             modifier = Modifier.weight(1F),
             isError = moneyError,
             value = money,
@@ -107,10 +112,15 @@ fun BudgetLine(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun BudgetLinePrev() {
     SoyPobreTheme {
-        BudgetLine { a, b -> }
+        BudgetLineNewInsert(
+            arrayOf(
+                "Children",
+                "Shopping"
+            )
+        ) { a, b -> }
     }
 }
