@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">SoyPobre</string>
+
+    <string name="onboard_page_one_title">Bem vindo ao SoyPobre</string>
+    <string name="onboard_page_one_subtitle">Vamos nos conhecer primeiro!</string>
+    <string name="onboard_page_one_users_name_question">Qual o seu nome?</string>
+    <string name="onboard_page_one_users_name_hint">"Meu nome"</string>
+
+    <string name="onboard_page_two_title">Vamos criar nosso primeiro orcamento</string>
+    <string name="onboard_page_two_expense_title">Gastos</string>
+    <string name="onboard_page_two_earnings_title">Ganhos</string>
+
+    <array name="onboard_known_expense_categories">
+        <item>Saude</item>
+        <item>Animais</item>
+        <item>Filhos</item>
+        <item>Mercado</item>
+    </array>
+
+    <array name="onboard_known_earning_categories">
+        <item>Salario</item>
+        <item>Pro-labore</item>
+        <item>Aposentadoria</item>
+        <item>Rendimentos</item>
+        <item>Alugueis</item>
+    </array>
 </resources>
