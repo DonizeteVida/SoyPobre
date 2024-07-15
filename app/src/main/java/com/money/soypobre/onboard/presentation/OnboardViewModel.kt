@@ -1,15 +1,20 @@
 package com.money.soypobre.onboard.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.money.soypobre.domain.model.Budget
+import com.money.soypobre.onboard.domain.usecase.CreateUserBudgetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardViewModel @Inject constructor() : ViewModel() {
-    val state = MutableStateFlow(OnboardState())
+class OnboardViewModel @Inject constructor(
+    private val createUserBudgetUseCase: CreateUserBudgetUseCase
+) : ViewModel() {
+    val state = MutableStateFlow(State())
 
     fun updateUsername(username: String) {
         state.update {
@@ -31,6 +36,21 @@ class OnboardViewModel @Inject constructor() : ViewModel() {
 
     fun onUserConfirm(callback: () -> Unit) {
         state.update { it.copy(isLoading = true) }
-
+        state.value.run {
+            viewModelScope.launch {
+                createUserBudgetUseCase(
+                    earnings = earnings,
+                    expenses = expenses
+                )
+                callback()
+            }
+        }
     }
+
+    data class State(
+        val isLoading: Boolean = false,
+        val username: String = "",
+        val expenses: List<Budget> = emptyList(),
+        val earnings: List<Budget> = emptyList()
+    )
 }

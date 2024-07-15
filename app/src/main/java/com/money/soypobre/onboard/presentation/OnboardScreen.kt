@@ -49,8 +49,8 @@ import com.money.soypobre.ui.theme.SoyPobreTheme
 import kotlinx.coroutines.launch
 
 private val steps: List<@Composable OnboardViewModel.(next: () -> Unit) -> Unit> = listOf(
-//    { next -> Page1(next) },
-//    { next -> Page2(next) },
+    { next -> Page1(next) },
+    { next -> Page2(next) },
     { next -> Page3(next) }
 )
 
