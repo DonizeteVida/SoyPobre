@@ -18,7 +18,7 @@ import com.money.soypobre.ui.theme.SoyPobreTheme
 @Composable
 fun BudgetLineFormated(
     category: String,
-    price: String,
+    price: Double,
     icon: @Composable (() -> Unit)? = null
 ) {
     Row(
@@ -40,6 +40,6 @@ fun BudgetLineFormated(
 @Composable
 private fun FormatedBudgetLinePreview() {
     SoyPobreTheme {
-        BudgetLineFormated(category = "Shopping", price = "1250.00")
+        BudgetLineFormated(category = "Shopping", price = 1250.00)
     }
 }

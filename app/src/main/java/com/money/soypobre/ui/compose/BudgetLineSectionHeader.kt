@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.money.soypobre.domain.model.Budget
 import com.money.soypobre.ui.theme.SoyPobreTheme
 
 @Composable
@@ -26,8 +27,8 @@ fun BudgetLineSectionHeader(
     modifier: Modifier = Modifier,
     title: String,
     icon: @Composable () -> Unit,
-    items: List<Pair<String, String>>,
-    drawItem: @Composable (index: Int, category: String, price: String) -> Unit,
+    items: List<Budget>,
+    drawItem: @Composable (index: Int, description: String, price: Double) -> Unit,
     trailing: @Composable () -> Unit = {}
 ) {
     Column(
@@ -42,8 +43,8 @@ fun BudgetLineSectionHeader(
         }
         Spacer(modifier = Modifier.height(16.dp))
         LazyColumn {
-            itemsIndexed(items) { index, (category, price) ->
-                drawItem(index, category, price)
+            itemsIndexed(items) { index, (_, description, price) ->
+                drawItem(index, description, price)
                 if (index < items.lastIndex) {
                     HorizontalDivider()
                 }
@@ -66,11 +67,14 @@ private fun BudgetLineSectionHeaderPreview() {
                     contentDescription = null
                 )
             },
-            items = mutableListOf(
-                "Shopping" to "123",
-                "Drugs" to "431",
-                "Children" to "520.0"
-            ),
+            items = List(10) {
+                Budget(
+                    id = it.toLong(),
+                    description = "$it",
+                    price = it.toDouble(),
+                    type = Budget.BudgetType.EXPENSE
+                )
+            },
             drawItem = { _, category, price ->
                 BudgetLineFormated(category = category, price = price)
             }

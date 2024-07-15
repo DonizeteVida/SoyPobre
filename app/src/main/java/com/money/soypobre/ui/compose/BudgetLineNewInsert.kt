@@ -30,15 +30,15 @@ import com.money.soypobre.ui.theme.SoyPobreTheme
 @Composable
 fun BudgetLineNewInsert(
     categories: Array<String> = emptyArray(),
-    onAddClick: (category: String, description: String) -> Unit
+    onAddClick: (description: String, price: Double) -> Unit
 ) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
 
-    val (category, setCategory) = remember { mutableStateOf("") }
-    val (money, setMoney) = remember { mutableStateOf("") }
+    val (description, setDescription) = remember { mutableStateOf("") }
+    val (price, setPrice) = remember { mutableStateOf("") }
 
-    val (categoryError, hasCategoryError) = remember { mutableStateOf(false) }
-    val (moneyError, hasMoneyError) = remember { mutableStateOf(false) }
+    val (descriptionError, hasDescriptionError) = remember { mutableStateOf(false) }
+    val (priceError, hasPriceError) = remember { mutableStateOf(false) }
 
     Row(
         Modifier.fillMaxWidth(),
@@ -51,9 +51,9 @@ fun BudgetLineNewInsert(
         ) {
             OutlinedTextField(
                 maxLines = 1,
-                isError = categoryError,
-                value = category,
-                onValueChange = setCategory,
+                isError = descriptionError,
+                value = description,
+                onValueChange = setDescription,
                 readOnly = true,
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
@@ -71,7 +71,7 @@ fun BudgetLineNewInsert(
                             Text(category)
                         },
                         onClick = {
-                            setCategory(category)
+                            setDescription(category)
                             setExpanded(false)
                         }
                     )
@@ -84,27 +84,27 @@ fun BudgetLineNewInsert(
                 Text(stringResource(id = R.string.app_money_symbol))
             },
             modifier = Modifier.weight(1F),
-            isError = moneyError,
-            value = money,
-            onValueChange = setMoney,
+            isError = priceError,
+            value = price,
+            onValueChange = setPrice,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(
             onClick = {
-                val categoryError = category.isBlank()
-                hasCategoryError(categoryError)
+                val descriptionError = description.isBlank()
+                hasDescriptionError(descriptionError)
 
-                val moneyError = money.isBlank() ||
-                        money.toFloatOrNull() == null
-                hasMoneyError(moneyError)
+                val priceError = price.isBlank() ||
+                        price.toDoubleOrNull() == null
+                hasPriceError(priceError)
 
-                if (categoryError || moneyError) {
+                if (descriptionError || priceError) {
                     return@IconButton
                 }
-                onAddClick(category, money)
-                setCategory("")
-                setMoney("")
+                onAddClick(description, price.toDouble())
+                setDescription("")
+                setPrice("")
             }
         ) {
             RoundedIcon(icon = Icons.Rounded.Add)

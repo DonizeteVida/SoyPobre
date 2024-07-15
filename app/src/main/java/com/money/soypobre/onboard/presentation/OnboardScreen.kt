@@ -14,9 +14,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
@@ -39,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.money.soypobre.R
+import com.money.soypobre.domain.model.Budget
 import com.money.soypobre.ui.compose.BudgetLineFormated
 import com.money.soypobre.ui.compose.BudgetLineNewInsert
 import com.money.soypobre.ui.compose.BudgetLineSectionHeader
@@ -46,8 +49,8 @@ import com.money.soypobre.ui.theme.SoyPobreTheme
 import kotlinx.coroutines.launch
 
 private val steps: List<@Composable OnboardViewModel.(next: () -> Unit) -> Unit> = listOf(
-    { next -> Page1(next) },
-    { next -> Page2(next) },
+//    { next -> Page1(next) },
+//    { next -> Page2(next) },
     { next -> Page3(next) }
 )
 
@@ -203,8 +206,12 @@ fun OnboardViewModel.Page2(next: () -> Unit) {
             trailing = {
                 BudgetLineNewInsert(
                     stringArrayResource(id = R.array.onboard_known_earning_categories)
-                ) { category, description ->
-                    earnings += category to description
+                ) { description, price ->
+                    earnings += Budget(
+                        description = description,
+                        price = price,
+                        type = Budget.BudgetType.EARNING
+                    )
                 }
             }
         )
@@ -234,8 +241,12 @@ fun OnboardViewModel.Page2(next: () -> Unit) {
             trailing = {
                 BudgetLineNewInsert(
                     stringArrayResource(id = R.array.onboard_known_expense_categories)
-                ) { category, description ->
-                    expenses += category to description
+                ) { description, price ->
+                    expenses += Budget(
+                        description = description,
+                        price = price,
+                        type = Budget.BudgetType.EXPENSE
+                    )
                 }
             }
         )
@@ -264,6 +275,7 @@ fun OnboardViewModel.Page2(next: () -> Unit) {
 @Composable
 private fun OnboardViewModel.Page3(next: () -> Unit) {
     val state by state.collectAsState()
+    val isLoading = state.isLoading
     val expenses = state.expenses
     val earnings = state.earnings
 
@@ -327,18 +339,37 @@ private fun OnboardViewModel.Page3(next: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Column(
+            Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(stringResource(id = R.string.onboard_page_three_confirmation))
+        }
+
         Row(
             Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(
-                onClick = {
-                    next()
+            if (isLoading) {
+                CircularProgressIndicator()
+            } else {
+                Text(
+                    text = "->"
+                )
+
+                IconButton(
+                    onClick = { onUserConfirm(next) }
+                ) {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        tint = Color.Red,
+                        contentDescription = null
+                    )
                 }
-            ) {
-                Icon(
-                    Icons.Filled.Check,
-                    contentDescription = null
+
+                Text(
+                    text = "<-"
                 )
             }
         }

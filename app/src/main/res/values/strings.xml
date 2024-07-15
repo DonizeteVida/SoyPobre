@@ -14,6 +14,7 @@
 
     <string name="onboard_page_three_title">Vamos confirmar suas informacoes: </string>
     <string name="onboard_page_three_username_confirm">O seu nome e: %s</string>
+    <string name="onboard_page_three_confirmation">Se esta tudo certo, basta confirmar abaixo</string>
 
     <array name="onboard_known_expense_categories">
         <item>Saude</item>
