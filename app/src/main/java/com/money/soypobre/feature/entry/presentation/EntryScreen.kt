@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.Button
@@ -73,15 +72,20 @@ private val TAB_INFOS = mapOf(
 )
 
 @Composable
-fun EntryScreen() {
+fun EntryScreen(
+    onEntryAdded: () -> Unit
+) {
     val viewModel = hiltViewModel<EntryViewModel>()
     val state by viewModel.state.collectAsState()
 
     EntryScreenInner(
         state,
         onBudgetTypeChanged = viewModel::searchBudgetsForType,
-        onEntryCompleted = {
-
+        onEntryCompleted = { price: Double,
+                             date: Long,
+                             description: String,
+                             budget: Budget ->
+            viewModel.onEntryCompleted(price, date, description, budget, onEntryAdded)
         }
     )
 }
@@ -91,7 +95,12 @@ fun EntryScreen() {
 private fun EntryScreenInner(
     state: EntryViewModel.State,
     onBudgetTypeChanged: (Budget.BudgetType) -> Unit,
-    onEntryCompleted: () -> Unit
+    onEntryCompleted: (
+        price: Double,
+        date: Long,
+        description: String,
+        budget: Budget
+    ) -> Unit
 ) {
     val (selectedType, setSelectedType) = remember { mutableStateOf(Budget.BudgetType.EXPENSE) }
     val (price, setPrice) = remember { mutableStateOf("") }
@@ -101,7 +110,8 @@ private fun EntryScreenInner(
 
     Scaffold(
         topBar = {
-            val info = TAB_INFOS[selectedType] ?: throw IllegalStateException("$selectedType not found")
+            val info =
+                TAB_INFOS[selectedType] ?: throw IllegalStateException("$selectedType not found")
             TopAppBar(
                 title = { Text(stringResource(id = info.funnyTitle)) }
             )
@@ -175,7 +185,12 @@ private fun EntryScreenInner(
                         CircularProgressIndicator()
                     } else {
                         Button(onClick = {
-
+                            onEntryCompleted(
+                                price.toDoubleOrNull() ?: 0.0,
+                                timestamp,
+                                description,
+                                state.budgets[budgetIndex]
+                            )
                         }) {
                             Text(stringResource(id = R.string.entry_save_button))
                         }
@@ -195,7 +210,7 @@ private fun EntryScreenPreview() {
             onBudgetTypeChanged = {
 
             },
-            onEntryCompleted = {
+            onEntryCompleted = { a, b, c, d ->
 
             }
         )

@@ -16,16 +16,30 @@ class EntryViewModel @Inject constructor(
 ) : ViewModel() {
     val state = MutableStateFlow(State())
 
-    fun searchBudgetsForType(type: Budget.BudgetType) {
+    private fun async(callback: suspend () -> Unit) {
         state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            getBudgetsByTypeUseCase(type).also { budgets ->
-                state.update {
-                    it.copy(budgets = budgets)
-                }
-            }
+            callback()
             state.update { it.copy(isLoading = false) }
         }
+    }
+
+    fun searchBudgetsForType(type: Budget.BudgetType) = async {
+        getBudgetsByTypeUseCase(type).also { budgets ->
+            state.update {
+                it.copy(budgets = budgets)
+            }
+        }
+    }
+
+    fun onEntryCompleted(
+        price: Double,
+        date: Long,
+        description: String,
+        budget: Budget,
+        onEntryAdded: () -> Unit
+    ) = async {
+
     }
 
     data class State(

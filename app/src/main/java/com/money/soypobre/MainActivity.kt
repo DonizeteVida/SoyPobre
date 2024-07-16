@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<Entry> {
-                        EntryScreen()
+                        EntryScreen(navController::popBackStack)
                     }
                 }
             }
