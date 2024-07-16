@@ -15,7 +15,8 @@ interface BudgetEntryDao {
 
     @Query(
         "SELECT * FROM budget " +
-        "JOIN budget_entry ON budget.id = budget_entry.id"
+        "LEFT JOIN budget_entry ON budget.id = budget_entry.budgetId " +
+        "WHERE budget.type = :type "
     )
-    fun getAll(): Flow<Map<BudgetEntity, List<BudgetEntryEntity>>>
+    fun getAll(type: Int): Flow<Map<BudgetEntity, List<BudgetEntryEntity>>>
 }

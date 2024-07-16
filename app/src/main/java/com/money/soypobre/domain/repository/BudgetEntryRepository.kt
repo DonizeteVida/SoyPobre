@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface BudgetEntryRepository {
     suspend fun insert(budgetEntries: List<BudgetEntry>)
-    suspend fun getAll(): Flow<Map<Budget, List<BudgetEntry>>>
+    fun getAll(type: Budget.BudgetType): Flow<List<Pair<Budget, List<BudgetEntry>>>>
 }

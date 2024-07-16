@@ -39,8 +39,7 @@ class OnboardViewModel @Inject constructor(
         state.value.run {
             viewModelScope.launch {
                 insertBudgetsUseCase(
-                    earnings = earnings,
-                    expenses = expenses
+                    expenses + earnings
                 )
                 callback()
             }

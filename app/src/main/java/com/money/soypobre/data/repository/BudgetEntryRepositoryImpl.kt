@@ -17,14 +17,12 @@ class BudgetEntryRepositoryImpl @Inject constructor(
         dao.insert(budgetEntries.map(BudgetEntry::toEntity))
     }
 
-    override suspend fun getAll(): Flow<Map<Budget, List<BudgetEntry>>> {
-        return dao.getAll().map { map ->
-            map.mapKeys { (key, _) ->
-                key.toDomain()
-            }.mapValues { (key, value) ->
-                value.map { budgetEntry ->
-                    budgetEntry.toDomain(key)
-                }
+    override fun getAll(type: Budget.BudgetType): Flow<List<Pair<Budget, List<BudgetEntry>>>> {
+        return dao.getAll(type.ordinal).map { all ->
+            all.map {
+                val budget = it.key.toDomain()
+                val entries = it.value.map { entry -> entry.toDomain(budget) }
+                budget to entries
             }
         }
     }

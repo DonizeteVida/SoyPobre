@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "budget_entry")
-class BudgetEntryEntity(
+data class BudgetEntryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val budgetId: Long,

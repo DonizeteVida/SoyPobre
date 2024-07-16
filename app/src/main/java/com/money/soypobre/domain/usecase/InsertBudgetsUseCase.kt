@@ -8,10 +8,8 @@ class InsertBudgetsUseCase @Inject constructor(
     private val budgetRepository: BudgetRepository
 ) {
     suspend operator fun invoke(
-        earnings: List<Budget>,
-        expenses: List<Budget>
+        budgets: List<Budget>
     ) {
-        budgetRepository.insert(earnings)
-        budgetRepository.insert(expenses)
+        budgetRepository.insert(budgets)
     }
 }

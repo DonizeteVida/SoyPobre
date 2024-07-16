@@ -34,6 +34,8 @@
 
     <string name="home_page_welcome_title">Bem vindo ao\n\"Soy Pobre\"</string>
     <string name="home_page_welcome_subtitle">O seu melhor aplicativo para controle de finanças</string>
+    <string name="home_page_expense_chart_title">Grafico de gastos</string>
+    <string name="home_page_earning_chart_title">Grafico de ganhos</string>
 
     <string name="entry_expense_tab_title">Gasto</string>
     <string name="entry_expense_tab_funny_title">Ah… Mais gasto</string>
