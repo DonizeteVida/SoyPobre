@@ -20,6 +20,10 @@ class BudgetRepositoryImpl @Inject constructor(
     override suspend fun getAll(): List<Budget> {
         return dao.getAll().map(BudgetEntity::toDomain)
     }
+
+    override suspend fun getAll(type: Budget.BudgetType): List<Budget> {
+        return dao.getAll(type.ordinal).map(BudgetEntity::toDomain)
+    }
 }
 
 private fun Budget.toEntity() = run {

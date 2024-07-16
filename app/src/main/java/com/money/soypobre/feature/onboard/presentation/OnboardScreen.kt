@@ -1,4 +1,4 @@
-package com.money.soypobre.onboard.presentation
+package com.money.soypobre.feature.onboard.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -48,24 +48,44 @@ import com.money.soypobre.ui.compose.BudgetLineSectionHeader
 import com.money.soypobre.ui.theme.SoyPobreTheme
 import kotlinx.coroutines.launch
 
-private val steps: List<@Composable OnboardViewModel.(next: () -> Unit) -> Unit> = listOf(
-    { next -> Page1(next) },
-    { next -> Page2(next) },
-    { next -> Page3(next) }
-)
-
 @Composable
 fun OnboardScreen(
     viewModel: OnboardViewModel = hiltViewModel(),
     onFinish: () -> Unit
 ) {
+    val steps = listOf<@Composable (state: OnboardViewModel.State, next: () -> Unit) -> Unit>(
+        { state, next ->
+            Page1(
+                state,
+                next,
+                viewModel::updateUsername
+            )
+        },
+        { state, next ->
+            Page2(
+                state,
+                next,
+                viewModel::updateUserExpenses,
+                viewModel::updateUserEarnings
+            )
+        },
+        { state, next ->
+            Page3(
+                state,
+                next,
+                viewModel::onUserConfirm
+            )
+        }
+    )
+
     Scaffold { innerPadding ->
-        val state = rememberPagerState { steps.size }
+        val state by viewModel.state.collectAsState()
+        val pagerState = rememberPagerState { steps.size }
         val scope = rememberCoroutineScope()
 
-        BackHandler(state.currentPage > 0) {
+        BackHandler(pagerState.currentPage > 0) {
             scope.launch {
-                state.animateScrollToPage(state.currentPage - 1)
+                pagerState.animateScrollToPage(pagerState.currentPage - 1)
             }
         }
 
@@ -73,15 +93,15 @@ fun OnboardScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
-            state = state,
+            state = pagerState,
             userScrollEnabled = false
         ) {
-            steps[it].invoke(viewModel) {
-                if (it + 1 >= state.pageCount) {
+            steps[it].invoke(state) {
+                if (it + 1 >= pagerState.pageCount) {
                     onFinish()
                 } else {
                     scope.launch {
-                        state.animateScrollToPage(state.currentPage + 1)
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
                 }
             }
@@ -90,9 +110,11 @@ fun OnboardScreen(
 }
 
 @Composable
-private fun OnboardViewModel.Page1(next: () -> Unit) {
-
-    val state by state.collectAsState()
+private fun Page1(
+    state: OnboardViewModel.State,
+    next: () -> Unit,
+    updateUsername: (String) -> Unit
+) {
     val (username, setUsername) = remember { mutableStateOf(state.username) }
 
     Column(
@@ -164,9 +186,12 @@ private fun OnboardViewModel.Page1(next: () -> Unit) {
 }
 
 @Composable
-fun OnboardViewModel.Page2(next: () -> Unit) {
-
-    val state by state.collectAsState()
+fun Page2(
+    state: OnboardViewModel.State,
+    next: () -> Unit,
+    updateUserExpenses: (List<Budget>) -> Unit,
+    updateUserEarnings: (List<Budget>) -> Unit
+) {
     val earnings = remember { state.earnings.toMutableStateList() }
     val expenses = remember { state.expenses.toMutableStateList() }
 
@@ -187,7 +212,7 @@ fun OnboardViewModel.Page2(next: () -> Unit) {
             Modifier
                 .fillMaxWidth()
                 .weight(1F),
-            title = stringResource(id = R.string.onboard_page_two_earnings_title),
+            title = stringResource(id = R.string.onboard_page_two_earning_title),
             icon = {
                 Icon(
                     Icons.Filled.Add,
@@ -273,8 +298,11 @@ fun OnboardViewModel.Page2(next: () -> Unit) {
 }
 
 @Composable
-private fun OnboardViewModel.Page3(next: () -> Unit) {
-    val state by state.collectAsState()
+private fun Page3(
+    state: OnboardViewModel.State,
+    next: () -> Unit,
+    onUserConfirm: (() -> Unit) -> Unit
+) {
     val isLoading = state.isLoading
     val expenses = state.expenses
     val earnings = state.earnings
@@ -303,7 +331,7 @@ private fun OnboardViewModel.Page3(next: () -> Unit) {
             Modifier
                 .fillMaxWidth()
                 .weight(1F),
-            title = stringResource(id = R.string.onboard_page_two_earnings_title),
+            title = stringResource(id = R.string.onboard_page_two_earning_title),
             icon = {
                 Icon(
                     Icons.Filled.Add,
@@ -376,12 +404,39 @@ private fun OnboardViewModel.Page3(next: () -> Unit) {
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
-private fun OnboardScreenPrev() {
+private fun OnboardScreenPrevPage1() {
     SoyPobreTheme {
-        OnboardScreen {
+        Page1(
+            state = OnboardViewModel.State(),
+            next = {},
+            updateUsername = {}
+        )
+    }
+}
 
-        }
+@Preview(showSystemUi = true)
+@Composable
+private fun OnboardScreenPrevPage2() {
+    SoyPobreTheme {
+        Page2(
+            state = OnboardViewModel.State(),
+            next = {},
+            updateUserExpenses = {},
+            updateUserEarnings = {}
+        )
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun OnboardScreenPrevPage3() {
+    SoyPobreTheme {
+        Page3(
+            state = OnboardViewModel.State(),
+            next = {},
+            onUserConfirm = {}
+        )
     }
 }

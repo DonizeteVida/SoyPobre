@@ -2,6 +2,7 @@
     <string name="app_name">SoyPobre</string>
     <string name="app_money_symbol">R$</string>
     <string name="app_money_format">R$ %s</string>
+    <string name="app_calendar_confirm_button">Confirmar</string>
 
     <string name="onboard_page_one_title">Bem vindo ao SoyPobre</string>
     <string name="onboard_page_one_subtitle">Vamos nos conhecer primeiro!</string>
@@ -10,7 +11,7 @@
 
     <string name="onboard_page_two_title">Vamos criar nosso primeiro orcamento</string>
     <string name="onboard_page_two_expense_title">Gastos</string>
-    <string name="onboard_page_two_earnings_title">Ganhos</string>
+    <string name="onboard_page_two_earning_title">Ganhos</string>
 
     <string name="onboard_page_three_title">Vamos confirmar suas informacoes: </string>
     <string name="onboard_page_three_username_confirm">O seu nome e: %s</string>
@@ -25,9 +26,20 @@
 
     <array name="onboard_known_earning_categories">
         <item>Salario</item>
-        <item>Pro-labore</item>
+        <item>Pró-labore</item>
         <item>Aposentadoria</item>
         <item>Rendimentos</item>
         <item>Alugueis</item>
     </array>
+
+    <string name="home_page_welcome_title">Bem vindo ao\n\"Soy Pobre\"</string>
+    <string name="home_page_welcome_subtitle">O seu melhor aplicativo para controle de finanças</string>
+
+    <string name="entry_expense_tab_title">Gasto</string>
+    <string name="entry_expense_tab_funny_title">Ah… Mais gasto</string>
+    <string name="entry_earning_tab_title">Ganho</string>
+    <string name="entry_earning_tab_funny_title">Opa! Bora guardar!!!</string>
+    <string name="entry_input_money_hint">Insira seu gasto/ganho aqui</string>
+    <string name="entry_input_description_hint">Insira uma boa descrição aqui</string>
+    <string name="entry_save_button">Salvar</string>
 </resources>

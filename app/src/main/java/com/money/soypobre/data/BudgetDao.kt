@@ -16,4 +16,7 @@ interface BudgetDao {
 
     @Query("SELECT * FROM budget")
     suspend fun getAll(): List<BudgetEntity>
+
+    @Query("SELECT * FROM budget WHERE type = :type")
+    suspend fun getAll(type: Int): List<BudgetEntity>
 }

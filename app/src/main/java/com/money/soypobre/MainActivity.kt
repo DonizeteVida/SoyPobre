@@ -9,12 +9,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavOptions
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.money.soypobre.home.presentation.HomeScreen
-import com.money.soypobre.onboard.presentation.OnboardScreen
+import com.money.soypobre.feature.entry.presentation.EntryScreen
+import com.money.soypobre.feature.home.presentation.HomeScreen
+import com.money.soypobre.feature.onboard.presentation.OnboardScreen
 import com.money.soypobre.ui.theme.SoyPobreTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
@@ -51,7 +54,17 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable<Home> {
-                        HomeScreen()
+                        HomeScreen(
+                            onSettings = {
+
+                            },
+                            onFabClick = {
+                                navController.navigate(Entry)
+                            }
+                        )
+                    }
+                    composable<Entry> {
+                        EntryScreen()
                     }
                 }
             }
@@ -60,7 +73,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Serializable
+object Onboard
+
+@Serializable
 object Home
 
 @Serializable
-object Onboard
+object Entry

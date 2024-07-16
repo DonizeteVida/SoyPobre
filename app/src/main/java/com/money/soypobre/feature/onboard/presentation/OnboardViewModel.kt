@@ -1,9 +1,9 @@
-package com.money.soypobre.onboard.presentation
+package com.money.soypobre.feature.onboard.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.money.soypobre.domain.model.Budget
-import com.money.soypobre.onboard.domain.usecase.CreateUserBudgetUseCase
+import com.money.soypobre.feature.onboard.domain.usecase.CreateUserBudgetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

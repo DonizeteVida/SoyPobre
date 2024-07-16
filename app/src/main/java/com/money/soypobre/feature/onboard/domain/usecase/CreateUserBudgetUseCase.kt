@@ -1,4 +1,4 @@
-package com.money.soypobre.onboard.domain.usecase
+package com.money.soypobre.feature.onboard.domain.usecase
 
 import com.money.soypobre.domain.model.Budget
 import com.money.soypobre.domain.repository.BudgetRepository

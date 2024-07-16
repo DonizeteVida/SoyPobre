@@ -1,16 +1,14 @@
 package com.money.soypobre.ui.compose
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,14 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.money.soypobre.R
 import com.money.soypobre.ui.theme.SoyPobreTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BudgetLineNewInsert(
     categories: Array<String> = emptyArray(),
     onAddClick: (description: String, price: Double) -> Unit
 ) {
-    val (expanded, setExpanded) = remember { mutableStateOf(false) }
-
     val (description, setDescription) = remember { mutableStateOf("") }
     val (price, setPrice) = remember { mutableStateOf("") }
 
@@ -44,39 +39,13 @@ fun BudgetLineNewInsert(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ExposedDropdownMenuBox(
+        SimpleOutlinedDropDownMenu(
             modifier = Modifier.weight(1F),
-            expanded = expanded,
-            onExpandedChange = setExpanded
+            items = categories.toList(),
+            value = description,
+            isError = descriptionError
         ) {
-            OutlinedTextField(
-                maxLines = 1,
-                isError = descriptionError,
-                value = description,
-                onValueChange = setDescription,
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { setExpanded(false) }
-            ) {
-                categories.forEach { category ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(category)
-                        },
-                        onClick = {
-                            setDescription(category)
-                            setExpanded(false)
-                        }
-                    )
-                }
-            }
+            setDescription(categories[it])
         }
         Spacer(modifier = Modifier.width(16.dp))
         OutlinedTextField(
@@ -116,11 +85,15 @@ fun BudgetLineNewInsert(
 @Composable
 private fun BudgetLinePrev() {
     SoyPobreTheme {
-        BudgetLineNewInsert(
-            arrayOf(
-                "Children",
-                "Shopping"
-            )
-        ) { a, b -> }
+        Column(
+            Modifier.fillMaxSize()
+        ) {
+            BudgetLineNewInsert(
+                arrayOf(
+                    "Children",
+                    "Shopping"
+                )
+            ) { a, b -> }
+        }
     }
 }
