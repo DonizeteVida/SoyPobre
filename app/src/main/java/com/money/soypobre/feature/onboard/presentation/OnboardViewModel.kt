@@ -3,7 +3,7 @@ package com.money.soypobre.feature.onboard.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.money.soypobre.domain.model.Budget
-import com.money.soypobre.feature.onboard.domain.usecase.CreateUserBudgetUseCase
+import com.money.soypobre.domain.usecase.InsertBudgetsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardViewModel @Inject constructor(
-    private val createUserBudgetUseCase: CreateUserBudgetUseCase
+    private val insertBudgetsUseCase: InsertBudgetsUseCase
 ) : ViewModel() {
     val state = MutableStateFlow(State())
 
@@ -38,7 +38,7 @@ class OnboardViewModel @Inject constructor(
         state.update { it.copy(isLoading = true) }
         state.value.run {
             viewModelScope.launch {
-                createUserBudgetUseCase(
+                insertBudgetsUseCase(
                     earnings = earnings,
                     expenses = expenses
                 )

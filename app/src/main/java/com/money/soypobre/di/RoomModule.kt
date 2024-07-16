@@ -25,4 +25,9 @@ object RoomModule {
     fun providesBudgetDao(
         database: AppDatabase
     ) = database.budgetDao
+
+    @Provides
+    fun providesBudgetEntryDao(
+        database: AppDatabase
+    ) = database.budgetEntryDao
 }

@@ -81,11 +81,11 @@ fun EntryScreen(
     EntryScreenInner(
         state,
         onBudgetTypeChanged = viewModel::searchBudgetsForType,
-        onEntryCompleted = { price: Double,
-                             date: Long,
+        onEntryCompleted = { amount: Double,
+                             timestamp: Long,
                              description: String,
                              budget: Budget ->
-            viewModel.onEntryCompleted(price, date, description, budget, onEntryAdded)
+            viewModel.onEntryCompleted(amount, timestamp, description, budget, onEntryAdded)
         }
     )
 }
@@ -96,14 +96,14 @@ private fun EntryScreenInner(
     state: EntryViewModel.State,
     onBudgetTypeChanged: (Budget.BudgetType) -> Unit,
     onEntryCompleted: (
-        price: Double,
-        date: Long,
+        amount: Double,
+        timestamp: Long,
         description: String,
         budget: Budget
     ) -> Unit
 ) {
-    val (selectedType, setSelectedType) = remember { mutableStateOf(Budget.BudgetType.EXPENSE) }
-    val (price, setPrice) = remember { mutableStateOf("") }
+    val (budgetType, setBudgetType) = remember { mutableStateOf(Budget.BudgetType.EXPENSE) }
+    val (amount, setAmount) = remember { mutableStateOf("") }
     val (timestamp, setTimestamp) = remember { mutableLongStateOf(0) }
     val (description, setDescription) = remember { mutableStateOf("") }
     val (budgetIndex, setBudgetIndex) = remember { mutableIntStateOf(0) }
@@ -111,26 +111,26 @@ private fun EntryScreenInner(
     Scaffold(
         topBar = {
             val info =
-                TAB_INFOS[selectedType] ?: throw IllegalStateException("$selectedType not found")
+                TAB_INFOS[budgetType] ?: throw IllegalStateException("$budgetType not found")
             TopAppBar(
                 title = { Text(stringResource(id = info.funnyTitle)) }
             )
         }
     ) { innerPadding ->
 
-        LaunchedEffect(selectedType) {
-            onBudgetTypeChanged(selectedType)
+        LaunchedEffect(budgetType) {
+            onBudgetTypeChanged(budgetType)
         }
 
         Column(
             Modifier
                 .padding(innerPadding)
         ) {
-            TabRow(selectedTabIndex = selectedType.ordinal - 1) {
+            TabRow(selectedTabIndex = budgetType.ordinal - 1) {
                 for ((type, title, _, icon) in TAB_INFOS.values) {
                     Tab(
-                        selected = selectedType == type,
-                        onClick = { setSelectedType(type) }
+                        selected = budgetType == type,
+                        onClick = { setBudgetType(type) }
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -151,8 +151,8 @@ private fun EntryScreenInner(
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(id = R.string.entry_input_money_hint)) },
                     leadingIcon = { Icon(Icons.Rounded.ShoppingCart, contentDescription = null) },
-                    value = price,
-                    onValueChange = setPrice,
+                    value = amount,
+                    onValueChange = setAmount,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -186,7 +186,7 @@ private fun EntryScreenInner(
                     } else {
                         Button(onClick = {
                             onEntryCompleted(
-                                price.toDoubleOrNull() ?: 0.0,
+                                amount.toDoubleOrNull() ?: 0.0,
                                 timestamp,
                                 description,
                                 state.budgets[budgetIndex]
