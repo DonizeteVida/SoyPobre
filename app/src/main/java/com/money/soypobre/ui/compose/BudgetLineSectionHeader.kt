@@ -31,13 +31,11 @@ fun BudgetLineSectionHeader(
     drawItem: @Composable (index: Int, description: String, price: Double) -> Unit,
     trailing: @Composable () -> Unit = {}
 ) {
-    Column(
-        modifier
-    ) {
+    Column(modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(title, style = MaterialTheme.typography.headlineSmall)
+            Text(title, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.width(16.dp))
             icon()
         }

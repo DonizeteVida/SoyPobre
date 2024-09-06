@@ -174,7 +174,7 @@ private fun EntryScreenInner(
                     items = state.budgets,
                     asString = Budget::description,
                     value = state.budgets.getOrNull(budgetIndex)?.description ?: "",
-                    onIndexChanged = setBudgetIndex
+                    onIndexSelected = setBudgetIndex
                 )
                 Spacer(modifier = Modifier.weight(1F))
                 Row(

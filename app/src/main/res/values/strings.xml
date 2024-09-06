@@ -11,7 +11,7 @@
     <string name="onboard_page_one_users_last_name_hint">Sobrenome</string>
     <string name="onboard_page_one_users_last_name_support">Insira seu ultimo nome</string>
 
-    <string name="onboard_page_two_title">Vamos criar nosso primeiro orcamento</string>
+    <string name="onboard_page_two_title">Bora criar nosso primeiro orcamento!</string>
     <string name="onboard_page_two_expense_title">Gastos</string>
     <string name="onboard_page_two_earning_title">Ganhos</string>
 
@@ -39,9 +39,9 @@
     <string name="home_page_expense_chart_title">Grafico de gastos</string>
     <string name="home_page_earning_chart_title">Grafico de ganhos</string>
 
-    <string name="entry_expense_tab_title">Gasto</string>
+    <string name="entry_expense_tab_title">GASTO</string>
     <string name="entry_expense_tab_funny_title">Ah… Mais gasto</string>
-    <string name="entry_earning_tab_title">Ganho</string>
+    <string name="entry_earning_tab_title">GANHO</string>
     <string name="entry_earning_tab_funny_title">Opa! Bora guardar!!!</string>
     <string name="entry_input_money_hint">Insira seu gasto/ganho aqui</string>
     <string name="entry_input_description_hint">Insira uma boa descrição aqui</string>

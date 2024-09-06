@@ -16,10 +16,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,8 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.money.soypobre.R
 import com.money.soypobre.domain.model.Budget
+import com.money.soypobre.ui.compose.BudgetEditorSheet
 import com.money.soypobre.ui.compose.BudgetLineFormated
-import com.money.soypobre.ui.compose.BudgetLineNewInsert
 import com.money.soypobre.ui.compose.BudgetLineSectionHeader
 import com.money.soypobre.ui.compose.FooterIcon
 import com.money.soypobre.ui.theme.SoyPobreTheme
@@ -191,103 +190,58 @@ fun Page2(
     val expenses = remember { state.expenses.toMutableStateList() }
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.onboard_page_two_title),
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        BudgetLineSectionHeader(
-            Modifier
-                .fillMaxWidth()
-                .weight(1F),
-            title = stringResource(id = R.string.onboard_page_two_earning_title),
-            icon = {
-                Icon(
-                    Icons.Filled.Add,
-                    tint = Color.Green,
-                    contentDescription = null
+        val earningOptions = stringArrayResource(R.array.onboard_known_earning_categories).toList()
+        BudgetEditorSheet(
+            modifier = Modifier.weight(1F),
+            title = stringResource(R.string.entry_earning_tab_title),
+            options = earningOptions,
+            budgets = earnings,
+            onBudgetCreated = { option, value ->
+                val budget = Budget(
+                    -1,
+                    earningOptions[option],
+                    value,
+                    Budget.BudgetType.EARNING
                 )
+                earnings += budget
             },
-            items = earnings,
-            drawItem = { index, category, price ->
-                BudgetLineFormated(category = category, price = price) {
-                    IconButton(onClick = { earnings.removeAt(index) }) {
-                        Icon(Icons.Filled.Delete, contentDescription = null)
-                    }
-                }
-            },
-            trailing = {
-                BudgetLineNewInsert(
-                    stringArrayResource(id = R.array.onboard_known_earning_categories)
-                ) { description, price ->
-                    earnings += Budget(
-                        description = description,
-                        price = price,
-                        type = Budget.BudgetType.EARNING
-                    )
-                }
-            }
+            onBudgetDeleted = earnings::removeAt
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        BudgetLineSectionHeader(
-            Modifier
-                .fillMaxWidth()
-                .weight(1F),
-            title = stringResource(id = R.string.onboard_page_two_expense_title),
-            icon = {
-                Icon(
-                    Icons.Filled.Close,
-                    tint = Color.Red,
-                    contentDescription = null
+        val expensesOptions = stringArrayResource(R.array.onboard_known_expense_categories).toList()
+        BudgetEditorSheet(
+            modifier = Modifier.weight(1F),
+            title = stringResource(R.string.entry_expense_tab_title),
+            options = expensesOptions,
+            budgets = expenses,
+            onBudgetCreated = { option, value ->
+                val budget = Budget(
+                    -1,
+                    earningOptions[option],
+                    value,
+                    Budget.BudgetType.EXPENSE
                 )
+                expenses += budget
             },
-            items = expenses,
-            drawItem = { index, category, price ->
-                BudgetLineFormated(category = category, price = price) {
-                    IconButton(onClick = { expenses.removeAt(index) }) {
-                        Icon(Icons.Filled.Delete, contentDescription = null)
-                    }
-                }
-            },
-            trailing = {
-                BudgetLineNewInsert(
-                    stringArrayResource(id = R.array.onboard_known_expense_categories)
-                ) { description, price ->
-                    expenses += Budget(
-                        description = description,
-                        price = price,
-                        type = Budget.BudgetType.EXPENSE
-                    )
-                }
-            }
+            onBudgetDeleted = expenses::removeAt
         )
-
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+        Spacer(Modifier.height(32.dp))
+        Button(
+            enabled = earnings.isNotEmpty() && expenses.isNotEmpty(),
+            onClick = {
+                updateState(earnings, expenses)
+                next()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp)
         ) {
-            IconButton(
-                enabled = expenses.isNotEmpty() && earnings.isNotEmpty(),
-                onClick = {
-                    updateState(earnings, expenses)
-                    next()
-                }
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null
-                )
-            }
+            Icon(Icons.Filled.Check, contentDescription = null)
         }
+        FooterIcon()
     }
 }
 

@@ -6,6 +6,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,7 @@ fun <T : Any> SimpleOutlinedDropDownMenu(
     items: List<T>,
     asString: (T) -> String = Any::toString,
     value: String,
-    onIndexChanged: (Int) -> Unit
+    onIndexSelected: (Int) -> Unit
 ) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
 
@@ -38,10 +39,8 @@ fun <T : Any> SimpleOutlinedDropDownMenu(
             value = value,
             onValueChange = {},
             readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-            },
-            modifier = Modifier.menuAnchor().fillMaxWidth()
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true)
         )
 
         ExposedDropdownMenu(
@@ -52,7 +51,7 @@ fun <T : Any> SimpleOutlinedDropDownMenu(
                 DropdownMenuItem(
                     text = { Text(asString(item)) },
                     onClick = {
-                        onIndexChanged(index)
+                        onIndexSelected(index)
                         setExpanded(false)
                     }
                 )
