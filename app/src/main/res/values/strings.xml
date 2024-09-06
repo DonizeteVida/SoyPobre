@@ -4,10 +4,12 @@
     <string name="app_money_format">R$ %s</string>
     <string name="app_calendar_confirm_button">Confirmar</string>
 
-    <string name="onboard_page_one_title">Bem vindo ao SoyPobre</string>
-    <string name="onboard_page_one_subtitle">Vamos nos conhecer primeiro!</string>
-    <string name="onboard_page_one_users_name_question">Qual o seu nome?</string>
-    <string name="onboard_page_one_users_name_hint">"Meu nome"</string>
+    <string name="onboard_page_one_title">Bem vindo!</string>
+    <string name="onboard_page_one_subtitle">Vamos comecar</string>
+    <string name="onboard_page_one_users_first_name_hint">Nome</string>
+    <string name="onboard_page_one_users_first_name_support">Insira seu primeiro nome</string>
+    <string name="onboard_page_one_users_last_name_hint">Sobrenome</string>
+    <string name="onboard_page_one_users_last_name_support">Insira seu ultimo nome</string>
 
     <string name="onboard_page_two_title">Vamos criar nosso primeiro orcamento</string>
     <string name="onboard_page_two_expense_title">Gastos</string>

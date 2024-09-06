@@ -16,21 +16,18 @@ class OnboardViewModel @Inject constructor(
 ) : ViewModel() {
     val state = MutableStateFlow(State())
 
-    fun updateUsername(username: String) {
+    fun updatePageState(
+        firstName: String,
+        lastName: String
+    ) {
         state.update {
-            it.copy(username = username)
+            it.copy(firstName = firstName, lastName = lastName)
         }
     }
 
-    fun updateUserExpenses(expenses: List<Budget>) {
+    fun updatePageState(earnings: List<Budget>, expenses: List<Budget>) {
         state.update {
-            it.copy(expenses = expenses)
-        }
-    }
-
-    fun updateUserEarnings(earnings: List<Budget>) {
-        state.update {
-            it.copy(earnings = earnings)
+            it.copy(earnings = earnings, expenses = expenses)
         }
     }
 
@@ -48,7 +45,8 @@ class OnboardViewModel @Inject constructor(
 
     data class State(
         val isLoading: Boolean = false,
-        val username: String = "",
+        val firstName: String = "",
+        val lastName: String = "",
         val expenses: List<Budget> = emptyList(),
         val earnings: List<Budget> = emptyList()
     )

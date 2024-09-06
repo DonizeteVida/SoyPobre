@@ -2,6 +2,7 @@ package com.money.soypobre.feature.onboard.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,21 +10,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,6 +50,7 @@ import com.money.soypobre.domain.model.Budget
 import com.money.soypobre.ui.compose.BudgetLineFormated
 import com.money.soypobre.ui.compose.BudgetLineNewInsert
 import com.money.soypobre.ui.compose.BudgetLineSectionHeader
+import com.money.soypobre.ui.compose.FooterIcon
 import com.money.soypobre.ui.theme.SoyPobreTheme
 import kotlinx.coroutines.launch
 
@@ -58,22 +64,21 @@ fun OnboardScreen(
             Page1(
                 state,
                 next,
-                viewModel::updateUsername
+                viewModel::updatePageState
             )
         },
         { state, next ->
             Page2(
                 state,
                 next,
-                viewModel::updateUserExpenses,
-                viewModel::updateUserEarnings
+                viewModel::updatePageState
             )
         },
         { state, next ->
             Page3(
                 state,
                 next,
-                viewModel::onUserConfirm
+                {}
             )
         }
     )
@@ -113,75 +118,66 @@ fun OnboardScreen(
 private fun Page1(
     state: OnboardViewModel.State,
     next: () -> Unit,
-    updateUsername: (String) -> Unit
+    updateState: (String, String) -> Unit
 ) {
-    val (username, setUsername) = remember { mutableStateOf(state.username) }
+    val (firstName, setFirstName) = remember { mutableStateOf(state.firstName) }
+    val (lastName, setLastName) = remember { mutableStateOf(state.lastName) }
 
     Column(
         Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            stringResource(id = R.string.onboard_page_one_title),
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center
-        )
-        Spacer(
-            modifier = Modifier
-                .height(32.dp)
-                .fillMaxWidth()
-        )
-        Text(
-            stringResource(id = R.string.onboard_page_one_subtitle),
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Spacer(
-            modifier = Modifier
-                .height(32.dp)
-                .fillMaxWidth()
-        )
-        Text(
-            stringResource(id = R.string.onboard_page_one_users_name_question),
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Spacer(
-            modifier = Modifier
-                .height(16.dp)
-                .fillMaxWidth()
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text(stringResource(id = R.string.onboard_page_one_users_name_hint))
-            },
-            value = username,
-            onValueChange = setUsername
-        )
-
-        Spacer(
-            modifier = Modifier
+        Spacer(Modifier.weight(1F))
+        Column {
+            Text(
+                stringResource(id = R.string.onboard_page_one_title),
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                stringResource(id = R.string.onboard_page_one_subtitle),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(Modifier.height(32.dp))
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = firstName,
+                onValueChange = setFirstName,
+                singleLine = true,
+                placeholder = { Text(stringResource(R.string.onboard_page_one_users_first_name_hint)) },
+            )
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = lastName,
+                onValueChange = setLastName,
+                singleLine = true,
+                placeholder = { Text(stringResource(id = R.string.onboard_page_one_users_last_name_hint)) },
+            )
+        }
+        Box(
+            Modifier
                 .weight(1F)
-                .fillMaxWidth()
-        )
-
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+                .fillMaxSize()
+                .padding(bottom = 16.dp)
         ) {
-            IconButton(
-                enabled = username.run { isNotBlank() && length > 10 },
+            Button(
+                enabled = firstName.isNotBlank() && lastName.isNotBlank(),
+                modifier = Modifier.align(Alignment.BottomEnd),
+                shape = RoundedCornerShape(10),
                 onClick = {
-                    updateUsername(username)
+                    updateState(firstName, lastName)
                     next()
-                }
-            ) {
+                }) {
                 Icon(
-                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }
+        FooterIcon()
     }
 }
 
@@ -189,8 +185,7 @@ private fun Page1(
 fun Page2(
     state: OnboardViewModel.State,
     next: () -> Unit,
-    updateUserExpenses: (List<Budget>) -> Unit,
-    updateUserEarnings: (List<Budget>) -> Unit
+    updateState: (List<Budget>, List<Budget>) -> Unit
 ) {
     val earnings = remember { state.earnings.toMutableStateList() }
     val expenses = remember { state.expenses.toMutableStateList() }
@@ -283,8 +278,7 @@ fun Page2(
             IconButton(
                 enabled = expenses.isNotEmpty() && earnings.isNotEmpty(),
                 onClick = {
-                    updateUserExpenses(expenses)
-                    updateUserEarnings(earnings)
+                    updateState(earnings, expenses)
                     next()
                 }
             ) {
@@ -321,7 +315,7 @@ private fun Page3(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = stringResource(id = R.string.onboard_page_three_username_confirm).format(state.username),
+            text = stringResource(id = R.string.onboard_page_three_username_confirm).format(state.firstName),
             style = MaterialTheme.typography.headlineSmall
         )
 
@@ -411,7 +405,7 @@ private fun OnboardScreenPrevPage1() {
         Page1(
             state = OnboardViewModel.State(),
             next = {},
-            updateUsername = {}
+            updateState = { _, _ -> }
         )
     }
 }
@@ -423,8 +417,7 @@ private fun OnboardScreenPrevPage2() {
         Page2(
             state = OnboardViewModel.State(),
             next = {},
-            updateUserExpenses = {},
-            updateUserEarnings = {}
+            updateState = { _, _ -> }
         )
     }
 }
